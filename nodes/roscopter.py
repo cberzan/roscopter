@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import roslib; roslib.load_manifest('roscopter')
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import String, Header
 from sensor_msgs.msg import NavSatFix, NavSatStatus, Imu
 import roscopter.msg
 import sys,struct,time,os
@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), '..
 
 
 from optparse import OptionParser
-parser = OptionParser("apmsetrate.py [options]")
+parser = OptionParser("roscopter.py [options]")
 
 parser.add_option("--baudrate", dest="baudrate", type='int',
                   help="master port baud rate", default=115200)
@@ -18,6 +18,7 @@ parser.add_option("--device", dest="device", default=None, help="serial device")
 parser.add_option("--rate", dest="rate", default=10, type='int', help="requested stream rate")
 parser.add_option("--source-system", dest='SOURCE_SYSTEM', type='int',
                   default=255, help='MAVLink source system for this GCS')
+parser.add_option("--enable-control",dest="enable_control", default=False, help="Enable listning to control messages")
 
 (opts, args) = parser.parse_args()
 
@@ -50,24 +51,26 @@ def send_rc(data):
 
 
 pub_gps = rospy.Publisher('gps', NavSatFix)
-pub_imu = rospy.Publisher('imu', Imu)
+#pub_imu = rospy.Publisher('imu', Imu)
 pub_rc = rospy.Publisher('rc', roscopter.msg.RC)
 pub_state = rospy.Publisher('state', roscopter.msg.State)
 pub_vfr_hud = rospy.Publisher('vfr_hud', roscopter.msg.VFR_HUD)
 pub_attitude = rospy.Publisher('attitude', roscopter.msg.Attitude)
-rospy.Subscriber("control", roscopter.msg.Control , mav_control)
-rospy.Subscriber("send_rc", roscopter.msg.RC , send_rc)
+pub_raw_imu =  rospy.Publisher('raw_imu', roscopter.msg.Mavlink_RAW_IMU)
+if opts.enable_control:
+    rospy.Subscriber("control", roscopter.msg.Control , mav_control)
+    rospy.Subscriber("send_rc", roscopter.msg.RC , send_rc)
 
 gps_msg = NavSatFix()
 
 def mainloop():
-    pub = rospy.Publisher('chatter', String)
     rospy.init_node('roscopter')
     while not rospy.is_shutdown():
         rospy.sleep(0.001)
         msg = master.recv_match(blocking=False)
         if not msg:
             continue
+        #print msg.get_type()
         if msg.get_type() == "BAD_DATA":
             if mavutil.all_printable(msg.data):
                 sys.stdout.write(msg.data)
@@ -97,9 +100,14 @@ def mainloop():
                 pub_attitude.publish(msg.roll, msg.pitch, msg.yaw, msg.rollspeed, msg.pitchspeed, msg.yawspeed)
 
 
+            if msg_type == "LOCAL_POSITION_NED" :
+                print "Local Pos: (%f %f %f) , (%f %f %f)" %(msg.x, msg.y, msg.z, msg.vx, msg.vy, msg.vz)
 
-
-
+            if msg_type == "RAW_IMU" :
+                pub_raw_imu.publish (Header(), msg.time_usec, 
+                                     msg.xacc, msg.yacc, msg.zacc, 
+                                     msg.xgyro, msg.ygyro, msg.zgyro,
+                                     msg.xmag, msg.ymag, msg.zmag)
 
 
 
@@ -108,9 +116,11 @@ def mainloop():
 wait_heartbeat(master)
 
 print("Sending all stream request for rate %u" % opts.rate)
-for i in range(0, 3):
-    master.mav.request_data_stream_send(master.target_system, master.target_component,
-                                        mavutil.mavlink.MAV_DATA_STREAM_ALL, opts.rate, 1)
+
+rospy.sleep(10)
+#for i in range(0, 3):
+master.mav.request_data_stream_send(master.target_system, master.target_component,
+                                    mavutil.mavlink.MAV_DATA_STREAM_ALL, opts.rate, 1)
 
 
 #master.mav.set_mode_send(master.target_system, 
