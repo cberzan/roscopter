@@ -1,0 +1,18 @@
+<package>
+  <description brief="roscopter">
+
+     roscopter
+
+  </description>
+  <author>Yogesh Alok Girdhar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/roscopter</url>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="geometry_msgs"/>
+
+</package>
+
+
