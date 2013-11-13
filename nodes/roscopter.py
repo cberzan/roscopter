@@ -149,20 +149,19 @@ def mainloop():
 
 
 
-# wait for the heartbeat msg to find the system ID
 wait_heartbeat(master)
 
+# print("Sleeping for 10 seconds to allow system, to be ready")
+# rospy.sleep(10)
 
-# waiting for 10 seconds for the system to be ready
-print("Sleeping for 10 seconds to allow system, to be ready")
-rospy.sleep(10)
 print("Sending all stream request for rate %u" % opts.rate)
-#for i in range(0, 3):
+master.mav.request_data_stream_send(
+    master.target_system,
+    master.target_component,
+    mavutil.mavlink.MAV_DATA_STREAM_ALL,
+    opts.rate,
+    1)
 
-master.mav.request_data_stream_send(master.target_system, master.target_component,
-                                    mavutil.mavlink.MAV_DATA_STREAM_ALL, opts.rate, 1)
-
-#master.mav.set_mode_send(master.target_system, 
 if __name__ == '__main__':
     try:
         mainloop()
