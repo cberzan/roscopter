@@ -1,20 +1,24 @@
 #!/usr/bin/env python
+import os
+import sys
+import struct
+import time
+
 import roslib; roslib.load_manifest('roscopter')
 import rospy
 from std_msgs.msg import String, Header
 from std_srvs.srv import *
 from sensor_msgs.msg import NavSatFix, NavSatStatus, Imu
+
 import roscopter.msg
-import sys,struct,time,os
+
 
 mavlink_dir = os.path.realpath(os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
     '..', 'mavlink'))
-print "adding to path: {}".format(mavlink_dir)
 sys.path.insert(0, mavlink_dir)
 
 pymavlink_dir = os.path.join(mavlink_dir, 'pymavlink')
-print "adding to path: {}".format(pymavlink_dir)
 sys.path.insert(0, pymavlink_dir)
 
 
@@ -47,29 +51,20 @@ def wait_heartbeat(m):
     print("Heartbeat from APM (system %u component %u)" % (m.target_system, m.target_system))
 
 
-#This does not work yet because APM does not have it implemented
-#def mav_control(data):
-#    '''
-#    Set roll, pitch and yaw.
-#    roll                      : Desired roll angle in radians (float)
-#    pitch                     : Desired pitch angle in radians (float)
-#    yaw                       : Desired yaw angle in radians (float)
-#    thrust                    : Collective thrust, normalized to 0 .. 1 (float)
-#    '''    
-#    master.mav.set_roll_pitch_yaw_thrust_send(master.target_system, master.target_component,
-#                                                                data.roll, data.pitch, data.yaw, data.thrust)
-#
-#    print ("sending control: %s"%data)
-
-
 def send_rc(data):
-    master.mav.rc_channels_override_send(master.target_system, master.target_component,data.channel[0],data.channel[1],data.channel[2],data.channel[3],data.channel[4],data.channel[5],data.channel[6],data.channel[7])
-    print ("sending rc: %s"%data)
+    master.mav.rc_channels_override_send(
+        master.target_system,
+        master.target_component,
+        data.channel[0],
+        data.channel[1],
+        data.channel[2],
+        data.channel[3],
+        data.channel[4],
+        data.channel[5],
+        data.channel[6],
+        data.channel[7])
+    print "sending rc: %s" % data
 
-
-#service callbacks
-#def set_mode(mav_mode):
-#    master.set_mode_auto()
 
 def set_arm(req):
     master.arducopter_arm()
@@ -147,12 +142,7 @@ def mainloop():
                                      msg.xmag, msg.ymag, msg.zmag)
 
 
-
-
 wait_heartbeat(master)
-
-# print("Sleeping for 10 seconds to allow system, to be ready")
-# rospy.sleep(10)
 
 print("Sending all stream request for rate %u" % opts.rate)
 master.mav.request_data_stream_send(
