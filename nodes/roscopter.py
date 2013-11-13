@@ -7,7 +7,15 @@ from sensor_msgs.msg import NavSatFix, NavSatStatus, Imu
 import roscopter.msg
 import sys,struct,time,os
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), '../mavlink/pymavlink'))
+mavlink_dir = os.path.realpath(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)),
+    '..', 'mavlink'))
+print "adding to path: {}".format(mavlink_dir)
+sys.path.insert(0, mavlink_dir)
+
+pymavlink_dir = os.path.join(mavlink_dir, 'pymavlink')
+print "adding to path: {}".format(pymavlink_dir)
+sys.path.insert(0, pymavlink_dir)
 
 
 from optparse import OptionParser
