@@ -8,7 +8,7 @@ import roslib; roslib.load_manifest('roscopter')
 import rospy
 from std_msgs.msg import String, Header
 from std_srvs.srv import *
-from sensor_msgs.msg import NavSatFix, NavSatStatus, Imu
+from sensor_msgs.msg import NavSatFix, NavSatStatus
 
 import roscopter.msg
 
@@ -75,14 +75,12 @@ def set_disarm(req):
     return True
 
 pub_gps = rospy.Publisher('gps', NavSatFix)
-#pub_imu = rospy.Publisher('imu', Imu)
 pub_rc = rospy.Publisher('rc', roscopter.msg.RC)
 pub_state = rospy.Publisher('state', roscopter.msg.State)
 pub_vfr_hud = rospy.Publisher('vfr_hud', roscopter.msg.VFR_HUD)
 pub_attitude = rospy.Publisher('attitude', roscopter.msg.Attitude)
 pub_raw_imu =  rospy.Publisher('raw_imu', roscopter.msg.Mavlink_RAW_IMU)
 if opts.enable_control:
-    #rospy.Subscriber("control", roscopter.msg.Control , mav_control)
     rospy.Subscriber("send_rc", roscopter.msg.RC , send_rc)
 
 #define service callbacks
