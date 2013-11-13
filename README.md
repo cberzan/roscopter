@@ -45,5 +45,31 @@ cd roscopter/mavlink
 ```
 
 
-[1]: https://github.com/cberzan/roscopter.git
+## Testing roscopter
+
+When connecting our APM via USB, it is seen as `/dev/ttyACM0`. Had to add
+myself to the `dialout` group to get permissions to read / write this device.
+
+Start roscore in one terminal.
+
+Run roscopter in another terminal:
+
+```
+cd ~/catkin_ws/src/roscopter
+nodes/roscopter.py --device=/dev/ttyACM0 --baudrate=115200
+```
+
+You should see that it receives a heartbeat from the APM, and then displays the
+APM initialization messages, ending with "Ready to FLY".
+
+In a third terminal, you can do for example `rostopic echo /attitude` to watch
+the attitude topic.
+
+See [original docs][1] for more details. Note that the original docs are wrong:
+you have to use `--baudrate` instead of `--rate`. See the source for the
+meaning of these parameters.
+
+
+
+[1]: https://code.google.com/p/roscopter/
 [2]: http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment#Create_a_ROS_Workspace
