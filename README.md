@@ -12,11 +12,12 @@ activate it (`source devel/setup.bash`).
 
 ```
 # Install dependencies:
-sudo aptitude install ros-groovy-sensor-msgs
+sudo aptitude install ros-groovy-sensor-msgs python-serial python-tz
 
 # Clone the roscopter repo and submodules (mavlink):
 cd ~/catkin_ws/src
 git clone https://github.com/cberzan/roscopter.git
+cd roscopter
 git submodule update --init
 
 # Check that ROS knows about roscopter:
