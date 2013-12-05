@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package>
+  <name>roscopter</name>
+  <version>0.1.0</version>
+  <description>ROS package to communicate with ArduCopter. Fork of https://code.google.com/p/roscopter/</description>
+
+  <maintainer email="cberzan@gmail.com">cberzan</maintainer>
+  <maintainer email="git@ss21k.co.uk">ssk2</maintainer>
+  <maintainer email="nahush.nnb@gmail.com">nbhanage</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+
+
+  <run_depend>message_runtime</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+
+</package>
