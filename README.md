@@ -24,7 +24,8 @@ git submodule update --init
 rospack list |grep roscopter
 
 # Build this sucker:
-rosmake roscopter
+cd ~/catkin_ws/
+catkin_make --pkg roscopter
 ```
 
 
