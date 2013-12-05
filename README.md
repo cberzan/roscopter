@@ -57,8 +57,7 @@ Start roscore in one terminal.
 Run roscopter in another terminal:
 
 ```
-cd ~/catkin_ws/src/roscopter
-nodes/roscopter.py --device=/dev/ttyACM0 --baudrate=115200
+rosrun roscopter roscopter_node.py  --device=/dev/ttyACM0 --baudrate=115200
 ```
 
 You should see that it receives a heartbeat from the APM, and then displays the
