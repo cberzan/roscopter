@@ -8,9 +8,10 @@ import roslib; roslib.load_manifest('roscopter')
 import rospy
 from std_msgs.msg import String, Header
 from std_srvs.srv import *
-from sensor_msgs.msg import NavSatFix, NavSatStatus
+from sensor_msgs.msg import NavSatFix
+from sensor_msgs.msg import NavSatStatus
 
-from roscopter.msg import *
+import roscopter.msg
 
 
 mavlink_dir = os.path.realpath(os.path.join(
@@ -75,17 +76,17 @@ def set_disarm(req):
     return True
 
 pub_gps = rospy.Publisher('gps', NavSatFix)
-pub_rc = rospy.Publisher('rc', RC)
-pub_state = rospy.Publisher('state', State)
-pub_vfr_hud = rospy.Publisher('vfr_hud', VFR_HUD)
-pub_attitude = rospy.Publisher('attitude', Attitude)
-pub_raw_imu =  rospy.Publisher('raw_imu', Mavlink_RAW_IMU)
+pub_rc = rospy.Publisher('rc', roscopter.msg.RC)
+pub_state = rospy.Publisher('state', roscopter.msg.State)
+pub_vfr_hud = rospy.Publisher('vfr_hud', roscopter.msg.VFR_HUD)
+pub_attitude = rospy.Publisher('attitude', roscopter.msg.Attitude)
+pub_raw_imu =  rospy.Publisher('raw_imu', roscopter.msg.Mavlink_RAW_IMU)
 if opts.enable_control:
-    rospy.Subscriber("send_rc", RC , send_rc)
+    rospy.Subscriber("send_rc", roscopter.msg.RC , send_rc)
 
 #define service callbacks
-arm_service = rospy.Service('arm',Empty,set_arm)
-disarm_service = rospy.Service('disarm',Empty,set_disarm)
+arm_service = rospy.Service('arm', Empty, set_arm)
+disarm_service = rospy.Service('disarm', Empty, set_disarm)
 
 
 #state
