@@ -69,11 +69,11 @@ def send_rc(data):
 
 def set_arm(req):
     master.arducopter_arm()
-    return True
+    return []
 
 def set_disarm(req):
     master.arducopter_disarm()
-    return True
+    return []
 
 pub_gps = rospy.Publisher('gps', NavSatFix)
 pub_rc = rospy.Publisher('rc', roscopter.msg.RC)
