@@ -28,7 +28,7 @@ Testing
 -------
 When connecting our APM via USB, it is seen as `/dev/ttyACM0`. 
 
-You may need to add the user running roscopter to the `dialout` group (`sudo usermod -G dialout username`) to get permission to read / write to this device.
+You may need to add the user running roscopter to the `dialout` group (`sudo usermod -a -G dialout username`) to get permission to read / write to this device.
 
 Start roscore in one terminal.
 ```
