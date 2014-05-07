@@ -22,3 +22,7 @@ add_message_files(
 generate_messages(DEPENDENCIES std_msgs sensor_msgs geometry_msgs)
 
 catkin_package()
+
+install(PROGRAMS nodes/roscopter_node.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
