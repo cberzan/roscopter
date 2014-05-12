@@ -51,6 +51,23 @@ See [original docs][1] for more details. (Note that the original docs are wrong:
 you have to use `--baudrate` instead of `--rate`. See the source for the
 meaning of these parameters.)
 
+Performance
+-----------
+pymavlink continually polls the serial port to look for new messages - which is processor intensive. 
+
+Setting `timeout=1` in `roscopter/mavlink/pymavlink/mavutil.py` as below proves to help the CPU usage significantly:
+```
+class mavserial(mavfile):
+    '''a serial mavlink port'''
+    def __init__(self, device, baud=115200, autoreconnect=False, source_system=255):
+        import serial
+        self.baud = baud
+        self.device = device
+        self.autoreconnect = autoreconnect
+        self.port = serial.Serial(self.device, self.baud, timeout=1,
+                                  dsrdtr=False, rtscts=False, xonxoff=False)
+```
+
 
 [1]: https://code.google.com/p/roscopter/
 [2]: http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment#Create_a_ROS_Workspace
